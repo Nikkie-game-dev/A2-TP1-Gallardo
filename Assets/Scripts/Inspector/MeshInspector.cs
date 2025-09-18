@@ -1,4 +1,3 @@
-// 07/09/2025 - TP1-Gallardo
 
 using CustomDrawing;
 using UnityEditor;
@@ -10,6 +9,7 @@ namespace Inspector
     public class MeshInspector : Editor
     {
         private BasicMesh _mesh;
+        private Object _parent;
         private Vector3 _position;
         private Vector3 _scale;
         private Vector3 _rotation;
@@ -19,12 +19,24 @@ namespace Inspector
         {
             _mesh = (BasicMesh) target;
             
+            _position = Vec3.ToUnityVec(_mesh.Transform.Position);
+            _scale = Vec3.ToUnityVec(_mesh.Transform.Scale);
+            _rotation = Vec3.ToUnityVec(_mesh.Transform.Rotation);
+            _parent = _mesh.parent;
+
+            
             _position = EditorGUILayout.Vector3Field("Position", _position);
             _scale = EditorGUILayout.Vector3Field("Scale", _scale);
             _rotation = EditorGUILayout.Vector3Field("Rotation", _rotation);
-
+            _parent = EditorGUILayout.ObjectField(_parent, typeof(BasicMesh), true);
+            
             if (GUI.changed)
             {
+                _mesh.Transform.Position = Vec3.FromUnityVec(_position);
+                _mesh.Transform.Scale = Vec3.FromUnityVec(_scale);
+                _mesh.Transform.Rotation = Vec3.FromUnityVec(_rotation);
+                _mesh.parent = (BasicMesh)_parent;
+                
                 EditorUtility.SetDirty(_mesh);
             }
 

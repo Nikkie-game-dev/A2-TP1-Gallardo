@@ -57,8 +57,16 @@ namespace CustomDrawing
             var y = new Quaternion(Mathf.Cos(angle.Y * 0.5f * Mathf.Deg2Rad), 0, Mathf.Sin(angle.Y * 0.5f * Mathf.Deg2Rad), 0);
             var z = new Quaternion(Mathf.Cos(angle.Z * 0.5f * Mathf.Deg2Rad), 0, 0, Mathf.Sin(angle.Z * 0.5f * Mathf.Deg2Rad));
 
-            return x * z * y;
+            return Normalize(z * y * x);
         }
+
+        public static Quaternion Normalize(Quaternion q)
+        {
+            var mag = Mag(q);
+            return new Quaternion(q.W / mag, q.X / mag, q.Y / mag, q.Z / mag);
+        }
+
+        public static float Mag(Quaternion q) => Mathf.Sqrt(q.W * q.W + q.X * q.X + q.Y * q.Y + q.Z * q.Z);
 
         public bool Equals(Quaternion other)
         {
